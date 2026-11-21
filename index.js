@@ -9,6 +9,17 @@ app.get('/health', (req, res) => {
 
 const links = {};
 
+function isValidUrl(value) {
+    if (typeof value !== 'string') return false;
+    try {
+        const parsed = new URL(value);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+
+}
+
 function generateCode() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let code = '';
@@ -19,10 +30,10 @@ function generateCode() {
 }
 
 app.post('/links', (req, res) => {
-    const { url } = req.body;
+    const url = req.body?.url;
 
-    if (!url) {
-        return res.status(400).json({ error: 'url দিতে হবে' });
+    if (!isValidUrl(url)) {
+        return res.status(400).json({ error: 'সঠিক http বা https URL দিতে হবে' });
     }
 
     const code = generateCode();
