@@ -31,6 +31,16 @@ app.post('/links', (req, res) => {
     res.status(201).json({ code, url });
 });
 
+app.get('/:code', (req, res) => {
+    const url = links[req.params.code];
+
+    if (!url) {
+        return res.status(400).json({ error: 'code pawa jay nai' });
+    }
+
+    res.redirect(302, url);
+});
+
 app.listen(3000, () => {
     console.log('Server চালু: http://localhost:3000');
 });
